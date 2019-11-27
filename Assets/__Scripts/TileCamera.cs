@@ -6,7 +6,7 @@ public class TileCamera : MonoBehaviour
 {
     static private int W, H;
     static private int[,] MAP;
-    static private Sprite[] SPRITES;
+    static public Sprite[] SPRITES;
     static public Transform TILE_ANCHOR;
     static public Tile[,] TILES;
 
@@ -43,14 +43,15 @@ public class TileCamera : MonoBehaviour
             tileNums = lines[j].Split(' ');
             for(int i=0;i<W; i++)
             {
-                if(tileNums[i] == "..")
-                {
+                if (tileNums[i] == "..")
+                { 
                     MAP[i, j] = 0;
                 }
                 else
                 {
                     MAP[i, j] = int.Parse(tileNums[i], hexNum);
                 }
+                
             }
         }
         print("Parsed" + SPRITES.Length + "sprites.");
