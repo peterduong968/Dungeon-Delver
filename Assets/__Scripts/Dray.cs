@@ -33,7 +33,10 @@ public class Dray : MonoBehaviour
         dirHeld = -1;
         for (int i = 0; i < 4; i++)
         {
-            if (Input.GetKey(keys[i])) dirHeld = i;
+            if (Input.GetKey(keys[i]))
+            { 
+                dirHeld = i; 
+            }
         }
 
         if(Input.GetKeyDown(KeyCode.Z) && Time.time >= timeAtkNext)
@@ -76,7 +79,7 @@ public class Dray : MonoBehaviour
                 break;
             case eMode.move:
                 vel = directions[dirHeld];
-                anim.CrossFade("Draw_Walk_" + facing, 0);
+                anim.CrossFade("Dray_Walk_" + facing, 0);
                 anim.speed = 1;
                 break;
         }

@@ -8,6 +8,21 @@ public class InRoom : MonoBehaviour
     static public float ROOM_H = 11;
     static public float WALL_T = 2;
 
+    [Header("Set In Inspector")]
+    public bool keepInRoom = true;
+    public float gridMult = 1;
+
+    private void LateUpdate()
+    {
+        if (keepInRoom)
+        {
+            Vector2 rPos = roomPos;
+            rPos.x = Mathf.Clamp(rPos.x, WALL_T, ROOM_W - 1 - WALL_T);
+            rPos.y = Mathf.Clamp(rPos.y, WALL_T, ROOM_H - 1 - WALL_T);
+            roomPos = rPos;
+        }
+    }
+
     public Vector2 roomPos
     {
         get
