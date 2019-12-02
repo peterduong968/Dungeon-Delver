@@ -60,13 +60,13 @@ public class GateKeeper : MonoBehaviour
             case lockedDL:
                 if (facing != 3) return;
                 ti.SetTile(ti.x, ti.y, openDL);
-                ti2 = TileCamera.TILES[ti.x + 1, ti.y];
+                ti2 = TileCamera.TILES[ti.x+1, ti.y];
                 ti2.SetTile(ti2.x, ti2.y, openDR);
                 break;
             case lockedDR:
                 if (facing != 3) return;
                 ti.SetTile(ti.x, ti.y, openDR);
-                ti2 = TileCamera.TILES[ti.x -1, ti.y];
+                ti2 = TileCamera.TILES[ti.x-1, ti.y];
                 ti2.SetTile(ti2.x, ti2.y, openDL);
                 break;
             default:
