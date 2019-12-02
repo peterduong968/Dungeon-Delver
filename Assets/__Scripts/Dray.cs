@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Dray : MonoBehaviour , IFacingMover
 {
-    public enum eMode {idle, move, attack, transition}
+    public enum eMode {idle, move, attack, transition, knockback}
 
     [Header("Set in Inspector")]
     public float speed = 5;
@@ -12,6 +12,9 @@ public class Dray : MonoBehaviour , IFacingMover
     public float attackDelay = .5f;
     public float transitionDelay = .5f;
     public int maxHealth = 10;
+    public float knockbackSpeed = 10;
+    public float knockbackDuration = .25f;
+    public float invincibleDuration = .5f;
 
     [Header("Set Dynamically")]
     public int dirHeld = -1;
@@ -26,9 +29,15 @@ public class Dray : MonoBehaviour , IFacingMover
     private Animator anim;
     private InRoom inRm;
     private Vector3[] directions = new Vector3[] { Vector3.right, Vector3.up, Vector3.left, Vector3.down};
+    public bool invincible = false;
 
     [SerializeField]
     private int _health;
+    private float knockbackDone = 0;
+    private float invincibleDone = 0;
+
+    private Vector3 knockbackVel;
+    private SpriteRenderer sRend;
 
     public int health
     {
@@ -39,6 +48,7 @@ public class Dray : MonoBehaviour , IFacingMover
     private KeyCode[] keys = new KeyCode[] { KeyCode.RightArrow, KeyCode.UpArrow, KeyCode.LeftArrow, KeyCode.DownArrow };
     private void Awake()
     {
+        sRend = GetComponent<SpriteRenderer>();
         rigid = GetComponent<Rigidbody>();
         anim = GetComponent<Animator>();
         inRm = GetComponent<InRoom>();
@@ -47,6 +57,13 @@ public class Dray : MonoBehaviour , IFacingMover
 
     void Update()
     {
+        if (invincible && Time.time > invincibleDone) invincible = false;
+        sRend.color = invincible ? Color.red : Color.white;
+        if(mode== eMode.knockback)
+        {
+            rigid.velocity = knockbackVel;
+            if (Time.time < knockbackDone) return;
+        }
         if(mode == eMode.transition)
         {
             rigid.velocity = Vector3.zero;
@@ -154,6 +171,38 @@ public class Dray : MonoBehaviour , IFacingMover
             }
         }
     }
+
+    void OnCollisionEnter(Collision coll)
+    {
+        if (invincible) return;
+        DamageEffect dEf = coll.gameObject.GetComponent<DamageEffect>();
+        if (dEf == null) return;
+        health -= dEf.damage;
+        invincible = true;
+        invincibleDone = Time.time + invincibleDuration;
+
+        if (dEf.knockback)
+        {
+            Vector3 delta = transform.position - coll.transform.position;
+            if(Mathf.Abs(delta.x) >= Mathf.Abs(delta.y))
+            {
+                delta.x = (delta.x > 0) ? 1 : -1;
+                delta.y = 0;
+            }
+            else
+            {
+                delta.x = 0;
+                delta.y = (delta.y > 0) ? 1 : -1;
+            }
+            knockbackVel = delta * knockbackSpeed;
+            rigid.velocity = knockbackVel;
+
+            mode = eMode.knockback;
+            knockbackDone = Time.time + knockbackDuration;
+        }
+
+    }
+
 
     public int GetFacing()
     {

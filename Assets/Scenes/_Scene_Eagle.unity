@@ -636,6 +636,7 @@ GameObject:
   - component: {fileID: 968970223}
   - component: {fileID: 968970224}
   - component: {fileID: 968970225}
+  - component: {fileID: 968970226}
   m_Layer: 0
   m_Name: Skeletos
   m_TagString: Untagged
@@ -798,6 +799,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 14e968441950782428481beb81f2486e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &968970226
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 968970217}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 21cf8b7182cc3b544bf6a27f866dc441, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  damage: 1
+  knockback: 1
 --- !u!1 &1524237336 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1000013282365372, guid: ef2195d4d1bab4df9ad6dc73b0faebb1,
@@ -959,10 +974,14 @@ MonoBehaviour:
   attackDelay: 0.5
   transitionDelay: 0.5
   maxHealth: 10
+  knockbackSpeed: 10
+  knockbackDuration: 0.25
+  invincibleDuration: 0.5
   dirHeld: -1
   facing: 1
   mode: 0
   numKeys: 0
+  invincible: 0
   _health: 0
 --- !u!135 &1731305698
 SphereCollider:
