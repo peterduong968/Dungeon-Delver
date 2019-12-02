@@ -15,12 +15,12 @@ public class CamFollowDray : MonoBehaviour
     private InRoom inRm;
     private float transStart;
 
-    private void Awake()
+    void Awake()
     {
         inRm = GetComponent<InRoom>();
     }
 
-    private void Update()
+    void Update()
     {
         if (TRANSITIONING)
         {

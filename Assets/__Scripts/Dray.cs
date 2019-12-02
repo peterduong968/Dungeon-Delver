@@ -16,6 +16,7 @@ public class Dray : MonoBehaviour , IFacingMover
     public int dirHeld = -1;
     public int facing = 1;
     public eMode mode = eMode.idle;
+    public int numKeys = 0;
     private float timeAtkDone = 0;
     private float timeAtkNext = 0;
     private float transitionDone = 0;
@@ -127,7 +128,7 @@ public class Dray : MonoBehaviour , IFacingMover
                 rm.x -= 1;
                 break;
             case 3:
-                rm.x -= 1;
+                rm.y -= 1;
                 break;
         }
 
@@ -186,6 +187,11 @@ public class Dray : MonoBehaviour , IFacingMover
         return inRm.GetRoomPosOnGrid(mult);
     }
 
+    public int keyCount
+    {
+        get { return numKeys; }
+        set { numKeys = value; }
+    }
 
 
 }

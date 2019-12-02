@@ -6,14 +6,16 @@ public class GridMove : MonoBehaviour
 {
     private IFacingMover mover;
 
-    private void Awake()
+    void Awake()
     {
         mover = GetComponent<IFacingMover>();
     }
 
-    private void FixedUpdate()
+    void FixedUpdate()
     {
-        if (!mover.moving) return;
+        if (!mover.moving) {
+            return;
+        }
         int facing = mover.GetFacing();
 
         Vector2 rPos = mover.roomPos;
