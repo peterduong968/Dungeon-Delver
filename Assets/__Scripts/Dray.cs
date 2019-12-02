@@ -11,6 +11,7 @@ public class Dray : MonoBehaviour , IFacingMover
     public float attackDuration = .25f;
     public float attackDelay = .5f;
     public float transitionDelay = .5f;
+    public int maxHealth = 10;
 
     [Header("Set Dynamically")]
     public int dirHeld = -1;
@@ -26,12 +27,22 @@ public class Dray : MonoBehaviour , IFacingMover
     private InRoom inRm;
     private Vector3[] directions = new Vector3[] { Vector3.right, Vector3.up, Vector3.left, Vector3.down};
 
+    [SerializeField]
+    private int _health;
+
+    public int health
+    {
+        get { return _health; }
+        set { _health = value; }
+    }
+
     private KeyCode[] keys = new KeyCode[] { KeyCode.RightArrow, KeyCode.UpArrow, KeyCode.LeftArrow, KeyCode.DownArrow };
     private void Awake()
     {
         rigid = GetComponent<Rigidbody>();
         anim = GetComponent<Animator>();
         inRm = GetComponent<InRoom>();
+        health = maxHealth;
     }
 
     void Update()
