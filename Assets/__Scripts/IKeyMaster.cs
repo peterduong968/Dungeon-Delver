@@ -3,6 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public interface IKeyMaster { 
-    int KeyCount { get; set; }
+    int keyCount { get; set; }
     int GetFacing();
 }

@@ -27,7 +27,7 @@ public class GateKeeper : MonoBehaviour
 
     void OnCollisionStay(Collision coll)
     {
-        if (keys.KeyCount < 1) return;
+        if (keys.keyCount < 1) return;
 
         Tile ti = coll.gameObject.GetComponent<Tile>();
         if (ti == null) return;
@@ -72,7 +72,7 @@ public class GateKeeper : MonoBehaviour
             default:
                 return;
         }
-        keys.KeyCount--;
+        keys.keyCount--;
     }
 
 

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Dray : MonoBehaviour , IFacingMover
+public class Dray : MonoBehaviour , IFacingMover , IKeyMaster
 {
     public enum eMode {idle, move, attack, transition, knockback}
 
