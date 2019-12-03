@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Dray : MonoBehaviour , IFacingMover , IKeyMaster
+public class Dray : MonoBehaviour, IFacingMover, IKeyMaster
 {
-    public enum eMode {idle, move, attack, transition, knockback}
+    public enum eMode { idle, move, attack, transition, knockback }
 
     [Header("Set in Inspector")]
     public float speed = 5;
@@ -28,8 +28,11 @@ public class Dray : MonoBehaviour , IFacingMover , IKeyMaster
     private Rigidbody rigid;
     private Animator anim;
     private InRoom inRm;
-    private Vector3[] directions = new Vector3[] { Vector3.right, Vector3.up, Vector3.left, Vector3.down};
+    private Vector3[] directions = new Vector3[] { Vector3.right, Vector3.up, Vector3.left, Vector3.down };
     public bool invincible = false;
+    public bool hasGrappler = false;
+    public Vector3 lastSafeLoc;
+    public int lastSafeFacing;
 
     [SerializeField]
     private int _health;
@@ -53,18 +56,20 @@ public class Dray : MonoBehaviour , IFacingMover , IKeyMaster
         anim = GetComponent<Animator>();
         inRm = GetComponent<InRoom>();
         health = maxHealth;
+        lastSafeLoc = transform.position;
+        lastSafeFacing = facing;
     }
 
     void Update()
     {
         if (invincible && Time.time > invincibleDone) invincible = false;
         sRend.color = invincible ? Color.red : Color.white;
-        if(mode== eMode.knockback)
+        if (mode == eMode.knockback)
         {
             rigid.velocity = knockbackVel;
             if (Time.time < knockbackDone) return;
         }
-        if(mode == eMode.transition)
+        if (mode == eMode.transition)
         {
             rigid.velocity = Vector3.zero;
             anim.speed = 0;
@@ -77,26 +82,26 @@ public class Dray : MonoBehaviour , IFacingMover , IKeyMaster
         for (int i = 0; i < 4; i++)
         {
             if (Input.GetKey(keys[i]))
-            { 
-                dirHeld = i; 
+            {
+                dirHeld = i;
             }
         }
 
-        if(Input.GetKeyDown(KeyCode.Z) && Time.time >= timeAtkNext)
+        if (Input.GetKeyDown(KeyCode.Z) && Time.time >= timeAtkNext)
         {
             mode = eMode.attack;
             timeAtkDone = Time.time + attackDuration;
             timeAtkNext = Time.time + attackDelay;
         }
 
-        if(Time.time >= timeAtkDone)
+        if (Time.time >= timeAtkDone)
         {
             mode = eMode.idle;
         }
 
-        if(mode != eMode.attack)
+        if (mode != eMode.attack)
         {
-            if(dirHeld == -1)
+            if (dirHeld == -1)
             {
                 mode = eMode.idle;
             }
@@ -162,10 +167,12 @@ public class Dray : MonoBehaviour , IFacingMover , IKeyMaster
 
         if (rm.x >= 0 && rm.x <= InRoom.MAX_RM_X)
         {
-            if(rm.y >= 0 && rm.y <= InRoom.MAX_RM_Y){
+            if (rm.y >= 0 && rm.y <= InRoom.MAX_RM_Y) {
                 roomNum = rm;
                 transitionPos = InRoom.DOORS[(doorNum + 2) % 4];
                 roomPos = transitionPos;
+                lastSafeLoc = transform.position;
+                lastSafeFacing = facing;
                 mode = eMode.transition;
                 transitionDone = Time.time + transitionDelay;
             }
@@ -184,7 +191,7 @@ public class Dray : MonoBehaviour , IFacingMover , IKeyMaster
         if (dEf.knockback)
         {
             Vector3 delta = transform.position - coll.transform.position;
-            if(Mathf.Abs(delta.x) >= Mathf.Abs(delta.y))
+            if (Mathf.Abs(delta.x) >= Mathf.Abs(delta.y))
             {
                 delta.x = (delta.x > 0) ? 1 : -1;
                 delta.y = 0;
@@ -215,8 +222,21 @@ public class Dray : MonoBehaviour , IFacingMover , IKeyMaster
             case PickUp.eType.key:
                 keyCount++;
                 break;
+            case PickUp.eType.grappler:
+                hasGrappler = true;
+                break;
         }
         Destroy(colld.gameObject);
+    }
+
+    public void ResetInRoom(int healthLoss = 0)
+    {
+        transform.position = lastSafeLoc;
+        facing = lastSafeFacing;
+        health -= healthLoss;
+
+        invincible = true;
+        invincibleDone = Time.time + invincibleDuration;
     }
 
 
