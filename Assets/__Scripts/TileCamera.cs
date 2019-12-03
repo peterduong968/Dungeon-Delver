@@ -2,6 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[System.Serializable]
+public class TileSwap
+{
+    public int tileNum;
+    public GameObject swapPrefab;
+    public GameObject guaranteedItemDrop;
+    public int overrideTileNum = -1;
+}
 public class TileCamera : MonoBehaviour
 {
     static private int W, H;
